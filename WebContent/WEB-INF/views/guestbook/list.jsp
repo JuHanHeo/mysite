@@ -1,4 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%
+pageContext.setAttribute("newLine", "\n");
+%>
 <!doctype html>
 <html>
 <head>
@@ -12,14 +18,14 @@
 		<div id="content">
 			<div id="guestbook">
 				<form action="/mysite/guestbook" method="post">
-					<input type="hidden" name="a" value="insert">
+					<input type="hidden" name="a" value="add">
 					<table>
 						<tr>
 							<td>이름</td><td><input type="text" name="name"></td>
-							<td>비밀번호</td><td><input type="password" name="pass"></td>
+							<td>비밀번호</td><td><input type="password" name="passwd"></td>
 						</tr>
 						<tr>
-							<td colspan=4><textarea name="content" id="content"></textarea></td>
+							<td colspan=4><textarea name="message" id="content"></textarea></td>
 						</tr>
 						<tr>
 							<td colspan=4 align=right><input type="submit" VALUE=" 확인 "></td>
@@ -27,28 +33,35 @@
 					</table>
 				</form>
 				<ul>
+				<c:forEach items="${list }" var="vo" varStatus="status">
 					<li>
+					<c:set var="count" value="${fn:length(list) }"/>
+					
+					
+					
 						<table>
 							<tr>
-								<td>[4]</td>
-								<td>안대혁</td>
-								<td>2015-11-10 11:22:30</td>
-								<td><a href="">삭제</a></td>
+								<td>[${status.index  } : ${status.count }]</td>
+								<td>${vo.name }</td>
+								<td>${vo.date }</td>
+								<td><a href="/mysite/guestbook?a=deletecon&no=${vo.no }">삭제</a></td>
 							</tr>
 							<tr>
-								<td colspan=4>
-								안녕하세요. ^^;<br>
-								하하하하	
+								<td colspan=4>${fn:replace(vo.message, newLine, "<br>") }
 								</td>
 							</tr>
 						</table>
+						
 						<br>
 					</li>
+					</c:forEach>
 				</ul>
 			</div>
 		</div>
-		<jsp:include page="/WEB-INF/views/include/navigation.jsp"/>
-		<jsp:include page="/WEB-INF/views/include/footer.jsp"/>
+		<c:import url="/WEB-INF/views/include/navigation.jsp">
+			<c:param name="menu" value="guestbook"/>
+		</c:import>
+		<c:import url="/WEB-INF/views/include/footer.jsp" />
 	</div>
 </body>
 </html>

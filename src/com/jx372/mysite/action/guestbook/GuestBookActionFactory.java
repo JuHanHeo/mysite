@@ -10,11 +10,11 @@ public class GuestBookActionFactory extends ActionFactory{
 		Action action = null;
 		System.out.println(actionName);
 		if("add".equals(actionName)){
-//			action = new AddAction();
+			action = new AddAction();
 		}else if("delete".equals(actionName)){
-//			action = new DeleteAction();
+			action = new DeleteAction();
 		}else if("deletecon".equals(actionName)){
-//			action = new DeleteConfirmAction();
+			action = new DeleteConfirmAction();
 		}else{
 			//index.jsp로
 			action = new ListAction();

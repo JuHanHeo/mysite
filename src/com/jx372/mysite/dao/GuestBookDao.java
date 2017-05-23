@@ -79,7 +79,7 @@ public class GuestBookDao {
 			conn = getConnection();
 			stmt = conn.createStatement();
 			
-			String sql = "select no, name, message, date_format(reg_date,'%Y-%m-%d') from guestbook";
+			String sql = "select no, name, message, date_format(reg_date,'%Y-%m-%d') from guestbook order by 1 desc";
 			rs = stmt.executeQuery(sql);
 			
 			while(rs.next()){
@@ -120,7 +120,7 @@ public class GuestBookDao {
 	public boolean delete(String no){
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		
+		System.out.println("삭제할꺼" + no);
 		int dno = Integer.parseInt(no);
 
 		try {

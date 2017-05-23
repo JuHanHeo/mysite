@@ -7,29 +7,25 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.jx372.mysite.action.main.MainActionFactory;
+import com.jx372.mysite.action.board.BoardActionFactory;
+import com.jx372.mysite.action.guestbook.GuestBookActionFactory;
 import com.jx372.web.action.Action;
+import com.jx372.web.action.ActionFactory;
 
-//@WebServlet("/main")
-public class MainServlet extends HttpServlet {
+@WebServlet("/board")
+public class BoardServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 //		request.setCharacterEncoding("UTF-8");
-		
 		String actionName = request.getParameter("a");
-		Action action = new MainActionFactory().getAction(actionName);
+		ActionFactory af = new BoardActionFactory();
+		Action action = af.getAction(actionName);
 		action.execute(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
-	}
-
-	@Override
-	public void init() throws ServletException {
-		String configPath = getServletConfig().getInitParameter("config");
-		System.out.println(configPath);
 	}
 
 }

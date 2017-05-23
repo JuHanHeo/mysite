@@ -1,25 +1,25 @@
-<%@page import="com.jx372.mysite.vo.GuestBookVo"%>
-<%@page import="java.util.List"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%
-	List<GuestBookVo> vos = (List<GuestBookVo>)request.getAttribute("list");
-	int i =1;
-%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
 <title>mysite</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
-<link href="/mysite/assets/css/board.css" rel="stylesheet" type="text/css">
+<link href="/mysite/assets/css/board.css" rel="stylesheet"
+	type="text/css">
 </head>
 <body>
 	<div id="container">
-		<jsp:include page="/WEB-INF/views/include/header.jsp"/>
+		<c:import url="/WEB-INF/views/include/header.jsp" />
 		<div id="content">
 			<div id="board">
-				<form id="search_form" action="" method="post">
-					<input type="text" id="kwd" name="kwd" value="">
-					<input type="submit" value="찾기">
+				<form id="search_form" action="/mysite/board?a=search&p=1"
+					method="post">
+					<input type="text" id="kwd" name="kwd" value=""> <input
+						type="submit" value="찾기">
 				</form>
 				<table class="tbl-ex">
 					<tr>
@@ -30,29 +30,78 @@
 						<th>작성일</th>
 						<th>&nbsp;</th>
 					</tr>
-					<%
-					for(GuestBookVo list : vos){
-						
-					%>				
-					<tr>
-						<td><%=i %></td>
-						<td><a href=""><%=list.getMessage() %></a></td>
-						<td><%=list.getName() %></td>
-						<td><%=i %></td>
-						<td><%=list.getDate() %></td>
-						<td><a href="" class="del">삭제</a></td>
-					</tr>
-					<% 
-					i++;
-					} %>
+					<c:forEach items="${list }" var="list" varStatus="status">
+						<tr>
+							<td>${list.no }</td>
+							<td class="left" style="padding-left:${list.depth*10}px"><c:if
+									test="${list.depth != 0 }">
+									<img
+										src="${pageContext.request.contextPath }/assets/images/reply.png">
+								</c:if> <a href="/mysite/board?a=view&no=${list.no }">${list.title }</a></td>
+							<td>${list.userName }</td>
+							<td>${list.hit }</td>
+							<td>${list.regDate }</td>
+							<c:if test="${authUser.no == list.userNo }">
+								<td><a href="/mysite/board?a=delete&no=${list.no }"
+									class="del">삭제</a></td>
+							</c:if>
+
+						</tr>
+					</c:forEach>
 				</table>
+				<div class="pager">
+					<c:choose>
+
+						<c:when test="${list[0].count <= 1 }">
+							<ul>
+								<li><a href="">◀</a></li>
+								<li class="selected">1</li>
+								<li><a href="">▶</a></li>
+							</ul>
+						</c:when>
+
+						<c:otherwise>
+							<ul>
+								<li><a href="">◀</a></li>
+								<c:forEach begin="1" end="${list[0].count }" var="i" step="1">
+									<c:if test="${param.p == i }">
+										<li class="selected">${i }</li>
+									</c:if>
+									<c:if test="${param.p != i }">
+										<c:if test="${!empty kwd}">
+											<li><a
+												href="/mysite/board?a=search&kwd=${param.kwd}&p=${i }">${i }</a></li>
+										</c:if>
+										<c:if test="${empty kwd}">
+											<li><a href="/mysite/board?p=${i }">${i }</a></li>
+										</c:if>
+									</c:if>
+								</c:forEach>
+								<li><a href="">▶</a></li>
+
+							</ul>
+						</c:otherwise>
+
+					</c:choose>
+
+				</div>
 				<div class="bottom">
-					<a href="" id="new-book">글쓰기</a>
-				</div>				
+					<c:choose>
+						<c:when test="${empty authUser }">
+						</c:when>
+
+						<c:otherwise>
+							<a href="/mysite/board?a=writeform" id="new-book">글쓰기</a>
+						</c:otherwise>
+					</c:choose>
+
+				</div>
 			</div>
 		</div>
-		<jsp:include page="/WEB-INF/views/include/navigation.jsp"/>
-		<jsp:include page="/WEB-INF/views/include/footer.jsp"/>
+		<c:import url="/WEB-INF/views/include/navigation.jsp">
+			<c:param name="menu" value="board" />
+		</c:import>
+		<c:import url="/WEB-INF/views/include/footer.jsp" />
 	</div>
 </body>
 </html>
