@@ -67,7 +67,7 @@ public class BoardDao {
 			if(start==null){
 				st=0;
 				pstmt.setInt(3, st);
-			} else{
+			} else{	
 				pstmt.setInt(3, (Integer.parseInt(start)-1)*5);
 			}
 			rs = pstmt.executeQuery();
